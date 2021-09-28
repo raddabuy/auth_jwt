@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ResetRequestNotification;
+use App\Jobs\SuccessResetNotification;
 use App\Models\PasswordReset;
 use App\Models\User;
 use App\Notifications\PasswordResetRequest;
@@ -15,10 +17,10 @@ class ResetPasswordController extends Controller
     {
         $email = $request->get('email');
 
-        $user = User::where('email', $email)->firstOrFail();
+//        $user = User::where('email', $email)->firstOrFail();
 
         $token = str_random(60);
-        $passwordReset = PasswordReset::updateOrCreate(
+        PasswordReset::updateOrCreate(
             ['email' => $email],
             [
                 'email' => $email,
@@ -26,10 +28,11 @@ class ResetPasswordController extends Controller
             ])
             ->first();
 
-        if ($user && $passwordReset)
-            $user->notify(
-                new PasswordResetRequest($token,$email,$user)
-            );
+//        $user->notify(
+//            new PasswordResetRequest($token,$email,$user)
+//        );
+//        ResetRequestNotification::dispatch($email, $token);
+        dispatch(new ResetRequestNotification($email, $token));
 
         return response()->json([
                 'Письмо отправлено на почту'
@@ -61,6 +64,7 @@ class ResetPasswordController extends Controller
         $user->update(['password' => bcrypt($password)]);
         $passwordReset->delete();
         $user->notify(new PasswordResetSuccess());
+//        SuccessResetNotification::dispatch($user);
 
 
         return response()->json([

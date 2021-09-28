@@ -11,6 +11,7 @@ class PasswordResetRequest extends Notification
 {
     use Queueable;
 
+    protected $token, $email, $user;
     /**
      * Create a new notification instance.
      *
