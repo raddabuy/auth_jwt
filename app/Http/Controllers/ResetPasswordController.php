@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateResetMessageRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Jobs\ResetRequestNotification;
 use App\Models\PasswordReset;
 use App\Models\User;
@@ -14,7 +16,7 @@ class ResetPasswordController extends Controller
 {
     use ThrowValidationErrorTrait;
 
-    public function createMessage(Request $request)
+    public function createMessage(CreateResetMessageRequest $request)
     {
         $email = $request->get('email');
 
@@ -34,7 +36,7 @@ class ResetPasswordController extends Controller
         ]);
     }
 
-    public function resetPassword(Request $request){
+    public function resetPassword(ResetPasswordRequest $request){
 
         $email = $request->get('email');
         $password = $request->get('password');
