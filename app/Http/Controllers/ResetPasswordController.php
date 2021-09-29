@@ -3,21 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ResetRequestNotification;
-use App\Jobs\SuccessResetNotification;
 use App\Models\PasswordReset;
 use App\Models\User;
-use App\Notifications\PasswordResetRequest;
 use App\Notifications\PasswordResetSuccess;
+use App\Traits\ThrowValidationErrorTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ResetPasswordController extends Controller
 {
+    use ThrowValidationErrorTrait;
+
     public function createMessage(Request $request)
     {
         $email = $request->get('email');
-
-//        $user = User::where('email', $email)->firstOrFail();
 
         $token = str_random(60);
         PasswordReset::updateOrCreate(
@@ -28,10 +27,6 @@ class ResetPasswordController extends Controller
             ])
             ->first();
 
-//        $user->notify(
-//            new PasswordResetRequest($token,$email,$user)
-//        );
-//        ResetRequestNotification::dispatch($email, $token);
         dispatch(new ResetRequestNotification($email, $token));
 
         return response()->json([
@@ -53,19 +48,18 @@ class ResetPasswordController extends Controller
             ->firstOrFail();
 
 
-//        if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
-//            $passwordReset->delete();
-//
-//            $this->throwValidationError('This password reset token is invalid');
-//        }
+        if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
+            $passwordReset->delete();
+
+            $this->throwValidationError('This password reset token is invalid');
+        }
 
         $user = User::where('email', $passwordReset->email)->firstOrFail();
 
         $user->update(['password' => bcrypt($password)]);
         $passwordReset->delete();
-        $user->notify(new PasswordResetSuccess());
-//        SuccessResetNotification::dispatch($user);
 
+        $user->notify(new PasswordResetSuccess());
 
         return response()->json([
             'Пароль успешно изменен'
