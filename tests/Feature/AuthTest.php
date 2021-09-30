@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Symfony\Component\VarDumper\VarDumper;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
@@ -40,23 +39,12 @@ class AuthTest extends TestCase
 
     public function testRegisterTest()
     {
-        $user = User::create(
-            [
-                'name' => 'Test User',
-                'email' => 'test@test.ru',
-                'password' => bcrypt('password')
-            ]
-        );
-
         $response = $this
-//        $response = $this->actingAs($user, 'api')
             ->json('POST', '/api/auth/register',[
                 "email" => "test@test.com",
                 "password" => "password",
                 "name" => "test user"
             ]);
-//        dd($response);
-        VarDumper::dump($response->decodeResponseJson());
 
         $response->assertStatus(200);
 
