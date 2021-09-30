@@ -18,6 +18,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('test', 'App\Http\Controllers\ResetPasswordController@test');
+
 Route::group([
 
     'middleware' => 'api',
@@ -31,5 +33,6 @@ Route::group([
 
     Route::post('reset/send', 'App\Http\Controllers\ResetPasswordController@createMessage');
     Route::post('reset', 'App\Http\Controllers\ResetPasswordController@resetPassword');
+
 
 });

@@ -68,4 +68,8 @@ class ResetPasswordController extends Controller
         ]);
 
     }
+
+    public function test(){
+        return response()->json(['message' => 'Successfully logged out']);
+    }
 }

@@ -33,10 +33,12 @@ class AuthController extends Controller
     }
 
 
-    public function register(RegisterRequest $request)
+    public function register(Request $request)
+//    public function register(RegisterRequest $request)
     {
         $user = User::create($request->all());
 
+//        $token = $this->login($user);
         $token = auth()->login($user);
 
         return $this->respondWithToken($token);
@@ -71,4 +73,5 @@ class AuthController extends Controller
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
     }
+
 }

@@ -20,22 +20,22 @@ class UsersSeeder extends Seeder
                 [
                     'name' => 'Kseniya',
                     'email' => 'kseniya@test.ru',
-                    'password' => Hash::make('password'),
+                    'password' => bcrypt('password'),
                 ],
                 [
                     'name' => 'Konstantin',
                     'email' => 'konstantin@test.ru',
-                    'password' => Hash::make('password'),
+                    'password' => bcrypt('password'),
                 ],
                 [
                     'name' => 'Alex',
                     'email' => 'alex@test.ru',
-                    'password' => Hash::make('password'),
+                    'password' => bcrypt('password'),
                 ],
                 [
                     'name' => 'Sheldon',
                     'email' => 'sheldon@test.ru',
-                    'password' => Hash::make('password'),
+                    'password' => bcrypt('password'),
                 ],
             ],
         );
